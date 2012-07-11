@@ -3,6 +3,9 @@ version: 0.3
 author: firecopy
 main: com.gmail.firecopy1.shield.Shield
 description: Make a Shield and get ready for battle!
+commands:
+  shield:
+    description: Access for shields command
 permissions:
   shield.use:
     description: Toggles if a player can use a shield.
