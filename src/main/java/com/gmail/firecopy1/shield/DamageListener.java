@@ -7,6 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 public class DamageListener implements Listener {
+    
     public Shield plugin;
     public DamageListener(Shield instance) {
         this.plugin = instance;
