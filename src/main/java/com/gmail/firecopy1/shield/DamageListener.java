@@ -6,20 +6,27 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
-public class Damage_Listener implements Listener {
-
+public class DamageListener implements Listener {
+    public Shield plugin;
+    public DamageListener(Shield instance) {
+        this.plugin = instance;
+    }
+    
+    Player player;
+    
     @EventHandler
     public void whenDamaged(EntityDamageByEntityEvent event) {
+        int BlockedDamage = plugin.getConfig().getInt("DamageBlocked", 4);
         Entity entity = event.getEntity();
         if (entity instanceof Player) {
-            Player player = (Player) entity;
+            player = (Player) entity;
             if (player.hasPermission("shield.use")) {
                 if (player.getItemInHand().getTypeId() == 34) {
-                    int Shielded_Damage = event.getDamage() - 4;
+                    int Shielded_Damage = event.getDamage() - BlockedDamage;
                     if (Shielded_Damage >= 0) {
                         event.setDamage(Shielded_Damage);
                         if (player.hasPermission("shield.message")) {
-                            player.sendMessage("Your shield has givem you protection!");
+                            player.sendMessage("Your shield has given you protection!");
                         }
                     } else {
                         event.setDamage(0);
@@ -32,5 +39,28 @@ public class Damage_Listener implements Listener {
                 player.sendMessage("Your shield is useless, if you don't have permission!");
             }
         }
+
+    
+/*
+    private void blockDamage() {
+        if (player.getItemInHand().getTypeId() == 34) {
+            int Shielded_Damage = event.getDamage() - 4;
+            if (Shielded_Damage >= 0) {
+                event.setDamage(Shielded_Damage);
+                if (player.hasPermission("shield.message")) {
+                    player.sendMessage("Your shield has givem you protection!");
+                }
+            }
+        }
     }
+
+    private void nullifyDamage() {
+        event.setDamage(0);
+        if (player.hasPermission("shield.message")) {
+            player.sendMessage("Your shield has protected you completly!");
+        }
+        * 
+        */
+    }
+
 }

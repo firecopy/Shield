@@ -7,18 +7,20 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class Shield extends JavaPlugin {
 
-    private final Damage_Listener dListener = new Damage_Listener();
+    public DamageListener dListener = new DamageListener(this);
     
     @Override
     public void onEnable() {
+        getConfig().options().copyDefaults(true);
+        saveConfig();
         registerEvents();
         addRecipe();
     }
-    
+
     private void registerEvents() {
         this.getServer().getPluginManager().registerEvents(dListener, this);
     }
-    
+
     private void addRecipe() {
         ShapedRecipe Shield = new ShapedRecipe(new ItemStack(Material.PISTON_EXTENSION, 1));
         Shield.shape(new String[]{"WWW", "WBW", "WWW"});
