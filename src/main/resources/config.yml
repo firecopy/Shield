@@ -1,2 +1,3 @@
 DamageBlocked: 4
-DisabledPlayers: true
+disabledplayers:
+  - notch

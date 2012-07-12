@@ -28,22 +28,19 @@ public class DamageListener implements Listener {
                     int Shielded_Damage = event.getDamage() - BlockedDamage;
                     if (Shielded_Damage >= 0) {
                         event.setDamage(Shielded_Damage);
-                        for (Player p : Bukkit.getOnlinePlayers()) {
-                            if (plugin.disabledPlayers.contains(p.getName())) {
-                                return;
-                            } else {
-                                player.sendMessage("Your shield has given you protection!");
-                            }
+                        if (plugin.disabledPlayers.contains(player.getName())) {
+                            return;
+                        } else {
+                            player.sendMessage("Your shield has given you protection!");
                         }
                     } else {
                         event.setDamage(0);
-                        for (Player p : Bukkit.getOnlinePlayers()) {
-                            if (plugin.disabledPlayers.contains(p.getName())) {
-                                return;
-                            } else {
-                                player.sendMessage("Your shield has protected you completly!");
-                            }
+                        if (plugin.disabledPlayers.contains(player.getName())) {
+                            return;
+                        } else {
+                            player.sendMessage("Your shield has protected you completly!");
                         }
+
                     }
                 }
             } else {
