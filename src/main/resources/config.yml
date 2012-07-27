@@ -1,3 +1,5 @@
 DamageBlocked: 4
+ShieldsCreated: 64
+ShieldsBreakingDamage: 1
 disabledplayers:
   - notch
