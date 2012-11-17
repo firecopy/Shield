@@ -40,6 +40,8 @@ public class DamageListener implements Listener {
                     int Shielded_Damage = event.getDamage() - plugin.blockDamaged;
                     int ShieldHurt = plugin.ShieldsBreakingDamage;
                     int ShieldDurability = player.getItemInHand().getAmount() - ShieldHurt;
+                    String ShieldMessageSomeDamage = plugin.shieldMessageSomeDamage;
+                    String ShieldMessageNoDamage = plugin.shieldMessageNoDamage;
                     
                     if (ShieldDurability <= 0){
                         player.setItemInHand(null);
@@ -51,12 +53,12 @@ public class DamageListener implements Listener {
                     if (Shielded_Damage >= NoDamage) {
                         event.setDamage(Shielded_Damage);
                         if (!plugin.disabledPlayers.contains(player.getName())) {
-                            player.sendMessage("Your shield has given you protection!");
+                            player.sendMessage(ShieldMessageSomeDamage);
                         }
                     } else {
                         event.setDamage(NoDamage);
                         if (!plugin.disabledPlayers.contains(player.getName())) {
-                            player.sendMessage("Your shield has protected you completly!");
+                            player.sendMessage(ShieldMessageNoDamage);
                         }
                     }
                 }

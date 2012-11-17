@@ -1,5 +1,7 @@
 DamageBlocked: 4
 ShieldsCreated: 64
 ShieldsBreakingDamage: 1
+ShieldMessageSomeDamage: "Your shield has given you protection!"
+ShieldMessageNoDamage: "Your shield has protected you completly!"
 disabledplayers:
   - notch

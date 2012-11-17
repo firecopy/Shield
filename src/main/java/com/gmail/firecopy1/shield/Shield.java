@@ -17,12 +17,13 @@ public class Shield extends JavaPlugin {
     public int blockDamaged;
     public int ShieldsCreated;
     public int ShieldsBreakingDamage;
+    public String shieldMessageSomeDamage;
+    public String shieldMessageNoDamage;
     //
     public static final ChatColor red = ChatColor.RED;
     public static final ChatColor gray = ChatColor.GRAY;
     public static final ChatColor green = ChatColor.GREEN;
     public static final String pre = gray + "[" + green + "Shield" + gray + "] ";
-
     @Override
     public void onEnable() {
         loadConfig();
@@ -51,6 +52,8 @@ public class Shield extends JavaPlugin {
     private void loadConfig() {
         this.getConfig().options().copyDefaults(true);
         disabledPlayers = this.getConfig().getStringList("disabledplayers");
+        shieldMessageSomeDamage = this.getConfig().getString("ShieldMessageSomeDamage", "Your shield has given you protection!");
+        shieldMessageNoDamage = this.getConfig().getString("ShieldMessageNoDamage", "Your shield has protected you completly!");
         blockDamaged = this.getConfig().getInt("DamageBlocked", 4);
         ShieldsCreated = this.getConfig().getInt("ShieldsCreated", 64);
         ShieldsBreakingDamage = this.getConfig().getInt("ShieldsBreakingDamage", 1);
@@ -82,10 +85,10 @@ public class Shield extends JavaPlugin {
     public void togglePlayers(CommandSender sender) {
         if (disabledPlayers.contains(sender.getName())) {
             disabledPlayers.remove(sender.getName());
-            sender.sendMessage(pre + ChatColor.RED + "Shield Notice's enabled!");
+            sender.sendMessage(pre + ChatColor.RED + "Shield Notice enabled!");
         } else {
             disabledPlayers.add(sender.getName());
-            sender.sendMessage(pre + ChatColor.RED + "Shield Notice's disabled!");
+            sender.sendMessage(pre + ChatColor.RED + "Shield Notice disabled!");
         }
     }
 }
