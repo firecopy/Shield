@@ -6,64 +6,93 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
-public class DamageListener implements Listener {
+public class DamageListener implements Listener
+{
 
     private final Shield plugin;
 
-    public DamageListener(Shield instance) {
+    public DamageListener(Shield instance)
+    {
         this.plugin = instance;
     }
 
     @EventHandler
-    public void whenDamaged(EntityDamageByEntityEvent event) {
-        final int NO_DAMAGE = 0;
-        final int SHIELD_ID = 34;
-        //
-        Entity entity = event.getEntity();
+    public void whenDamaged(EntityDamageByEntityEvent event)
+    {
+        final int shieldID = 34;
+        
+        Entity damaged = event.getEntity();
         Entity damager = event.getDamager();
         
-        if (damager instanceof Player) {
+        //If a player is attacking,
+        if (damager instanceof Player)
+        {
             Player PlayerDamager = (Player) damager;
-            if (PlayerDamager.hasPermission("shield.use")){
-                if (PlayerDamager.getItemInHand().getTypeId() == SHIELD_ID){       
-                    event.setDamage(NO_DAMAGE);
+            //and they have permission to use the shield,
+            if (PlayerDamager.hasPermission("shield.use"))
+            {
+            	//and it is in their hand,
+                if (PlayerDamager.getItemInHand().getTypeId() == shieldID)
+                {
+                	//they do no damage.
+                    event.setDamage(0);
                 }
             }
         }
 
-        if (entity instanceof Player) {
+        //If a player is attacked,
+        if (damaged instanceof Player)
+        {
+            Player player = (Player) damaged;
+        	boolean sendMessages = !plugin.disabledPlayers.contains(player);
             
-            Player player = (Player) entity;
-            
-            if (player.hasPermission("shield.use")) {
-                if (player.getItemInHand().getTypeId() == SHIELD_ID) {
-                    int damageRecieved = event.getDamage() - plugin.blockDamaged;
-                    int shieldDurabilityLost = plugin.ShieldsBreakingDamage;
-                    int shieldDurability = player.getItemInHand().getAmount() - shieldDurabilityLost;
-                    String ShieldMessageSomeDamage = plugin.shieldMessageSomeDamage;
-                    String ShieldMessageNoDamage = plugin.shieldMessageNoDamage;
+            //and they have permission to use the shield,
+            if (player.hasPermission("shield.use"))
+            {
+            	//and they are holding the shield,
+                if (player.getItemInHand().getTypeId() == shieldID)
+                {                	
+                	int currentdurability = player.getItemInHand().getDurability();
+                	int damageBlocked = plugin.damageBlocked;
+                    int maxdurability = plugin.durability;
+                    int newdurability = currentdurability + event.getDamage();
+                    String someDamage = Shield.prefix + Shield.yellow + plugin.messageSomeDamage;
+                    String noDamage = Shield.prefix + Shield.green + plugin.messageNoDamage;
                     
-                    if (shieldDurability <= 0){
-                        player.setItemInHand(null);
-                    }
-                    else {
-                        player.getItemInHand().setAmount(shieldDurability);
-                    }
                     
-                    if (damageRecieved >= 0) {
-                        event.setDamage(damageRecieved);
-                        if (!plugin.disabledPlayers.contains(player.getName())) {
-                            player.sendMessage(ShieldMessageSomeDamage);
-                        }
-                    } else {
-                        event.setDamage(NO_DAMAGE);
-                        if (!plugin.disabledPlayers.contains(player.getName())) {
-                            player.sendMessage(ShieldMessageNoDamage);
-                        }
+
+                    if (newdurability < maxdurability)
+                    {
+                    	event.setDamage(0);
+                    	if (sendMessages)
+                    	{
+                    		player.sendMessage(noDamage);
+                    	}
+                    }
+                    else if (newdurability == maxdurability)
+                    {
+                    	event.setDamage(0);
+                    	player.setItemInHand(null);
+                    	if (sendMessages)
+                    	{
+                    		player.sendMessage(noDamage);
+                    	}
+                    }
+                    else if (newdurability > maxdurability)
+                    {
+                    	event.setDamage(newdurability - maxdurability);
+                    	player.setItemInHand(null);
+                    	if (sendMessages)
+                    	{
+                    		player.sendMessage(someDamage);
+                    	}
                     }
                 }
-            } else {
-                if (!plugin.disabledPlayers.contains(player.getName())) {
+            }
+            else
+            {
+                if (sendMessages)
+                {
                     player.sendMessage("Your shield is useless, if you don't have permission!");
                 }
             }
