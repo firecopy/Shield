@@ -15,7 +15,7 @@ public class Shield extends JavaPlugin {
     private final DamageListener dListener = new DamageListener(this);
     public List<String> disabledPlayers;
     public int blockDamaged;
-    public int ShieldsCreated;
+    public int shieldsCreated;
     public int ShieldsBreakingDamage;
     public String shieldMessageSomeDamage;
     public String shieldMessageNoDamage;
@@ -42,7 +42,7 @@ public class Shield extends JavaPlugin {
     }
 
     private void addRecipe() {
-        ShapedRecipe Shield = new ShapedRecipe(new ItemStack(Material.PISTON_EXTENSION, ShieldsCreated));
+        ShapedRecipe Shield = new ShapedRecipe(new ItemStack(Material.PISTON_EXTENSION, shieldsCreated));
         Shield.shape(new String[]{"WWW", "WBW", "WWW"});
         Shield.setIngredient('W', Material.WOOD);
         Shield.setIngredient('B', Material.STRING);
@@ -55,7 +55,7 @@ public class Shield extends JavaPlugin {
         shieldMessageSomeDamage = this.getConfig().getString("ShieldMessageSomeDamage", "Your shield has given you protection!");
         shieldMessageNoDamage = this.getConfig().getString("ShieldMessageNoDamage", "Your shield has protected you completly!");
         blockDamaged = this.getConfig().getInt("DamageBlocked", 4);
-        ShieldsCreated = this.getConfig().getInt("ShieldsCreated", 64);
+        shieldsCreated = this.getConfig().getInt("ShieldsCreated", 64);
         ShieldsBreakingDamage = this.getConfig().getInt("ShieldsBreakingDamage", 1);
         saveConfig();
     }

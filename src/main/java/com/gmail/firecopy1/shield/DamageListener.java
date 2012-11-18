@@ -16,8 +16,8 @@ public class DamageListener implements Listener {
 
     @EventHandler
     public void whenDamaged(EntityDamageByEntityEvent event) {
-        final int NoDamage = 0;
-        final int ShieldId = 34;
+        final int NO_DAMAGE = 0;
+        final int SHIELD_ID = 34;
         //
         Entity entity = event.getEntity();
         Entity damager = event.getDamager();
@@ -25,8 +25,8 @@ public class DamageListener implements Listener {
         if (damager instanceof Player) {
             Player PlayerDamager = (Player) damager;
             if (PlayerDamager.hasPermission("shield.use")){
-                if (PlayerDamager.getItemInHand().getTypeId() == ShieldId){       
-                    event.setDamage(NoDamage);
+                if (PlayerDamager.getItemInHand().getTypeId() == SHIELD_ID){       
+                    event.setDamage(NO_DAMAGE);
                 }
             }
         }
@@ -36,27 +36,27 @@ public class DamageListener implements Listener {
             Player player = (Player) entity;
             
             if (player.hasPermission("shield.use")) {
-                if (player.getItemInHand().getTypeId() == ShieldId) {
-                    int Shielded_Damage = event.getDamage() - plugin.blockDamaged;
-                    int ShieldHurt = plugin.ShieldsBreakingDamage;
-                    int ShieldDurability = player.getItemInHand().getAmount() - ShieldHurt;
+                if (player.getItemInHand().getTypeId() == SHIELD_ID) {
+                    int damageRecieved = event.getDamage() - plugin.blockDamaged;
+                    int shieldDurabilityLost = plugin.ShieldsBreakingDamage;
+                    int shieldDurability = player.getItemInHand().getAmount() - shieldDurabilityLost;
                     String ShieldMessageSomeDamage = plugin.shieldMessageSomeDamage;
                     String ShieldMessageNoDamage = plugin.shieldMessageNoDamage;
                     
-                    if (ShieldDurability <= 0){
+                    if (shieldDurability <= 0){
                         player.setItemInHand(null);
                     }
                     else {
-                        player.getItemInHand().setAmount(ShieldDurability);
+                        player.getItemInHand().setAmount(shieldDurability);
                     }
                     
-                    if (Shielded_Damage >= NoDamage) {
-                        event.setDamage(Shielded_Damage);
+                    if (damageRecieved >= 0) {
+                        event.setDamage(damageRecieved);
                         if (!plugin.disabledPlayers.contains(player.getName())) {
                             player.sendMessage(ShieldMessageSomeDamage);
                         }
                     } else {
-                        event.setDamage(NoDamage);
+                        event.setDamage(NO_DAMAGE);
                         if (!plugin.disabledPlayers.contains(player.getName())) {
                             player.sendMessage(ShieldMessageNoDamage);
                         }
