@@ -11,29 +11,24 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class Shield extends JavaPlugin
-{
+public class Shield extends JavaPlugin {
 
-	//Define Globals
-	//TODO Move Globals into a different class for good conventions.
+    //Define Globals
+    //TODO Move Globals into a different class for good conventions.
     public List<String> disabledPlayers;
-    
     public int damageBlocked = 4;
     public int durability = 64;
-    
     public String messageSomeDamage = "Your shield has given you protection!";
     public String messageNoDamage = "Your shield has protected you completely!";
-    
     public static ChatColor red = ChatColor.RED;
     public static ChatColor yellow = ChatColor.YELLOW;
     public static ChatColor gray = ChatColor.GRAY;
     public static ChatColor green = ChatColor.GREEN;
     public static String prefix = gray + "[" + green + "Shield" + gray + "] ";
-    
+
     //Code run on Enable
     @Override
-    public void onEnable()
-    {
+    public void onEnable() {
         loadConfig();
         this.getServer().getPluginManager().registerEvents(new DamageListener(this), this);
         addRecipes();
@@ -42,80 +37,59 @@ public class Shield extends JavaPlugin
 
     //Code run on Disable
     @Override
-    public void onDisable()
-    {
-    	disabledPlayers = null;
-    	damageBlocked = (Integer) null;
-    	durability = (Integer) null;
-    	messageSomeDamage = null;
-    	messageNoDamage = null;
-    	red = null;
-    	gray = null;
-    	green = null;
-    	prefix = null;
-        disableConfig();
+    public void onDisable() {
+        disabledPlayers = null;
+        damageBlocked = (Integer) null;
+        durability = (Integer) null;
+        messageSomeDamage = null;
+        messageNoDamage = null;
+        red = null;
+        gray = null;
+        green = null;
+        prefix = null;
+        saveConfig();
     }
 
-    private void addRecipes()
-    {
+    private void addRecipes() {
         ShapedRecipe Shield = new ShapedRecipe(new ItemStack(Material.PISTON_EXTENSION));
         Shield.shape(new String[]{"WWW", "WBW", "WWW"});
         Shield.setIngredient('W', Material.getMaterial(5));
         Shield.setIngredient('B', Material.STRING);
         this.getServer().addRecipe(Shield);
     }
-    
-    private void loadConfig()
-    {
+
+    private void loadConfig() {
         this.getConfig().options().copyDefaults(true);
         disabledPlayers = this.getConfig().getStringList("disabledplayers");
         messageSomeDamage = this.getConfig().getString("ShieldMessageSomeDamage");
         messageNoDamage = this.getConfig().getString("ShieldMessageNoDamage");
         durability = this.getConfig().getInt("ShieldsDurability");
     }
-    
-    private void disableConfig()
-    {
-        
-        saveConfig();
-    }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) 
-    {
-        if (!(sender instanceof Player))
-        {
-            sender.sendMessage("This command can only be run as a player.");
+    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+        if (!(sender instanceof Player)) {
+            sender.sendMessage("Only players can use this command. Doh!");
             return true;
         }
-        if (args.length == 1)
-        {
-        	if (args[0].toLowerCase() == "notice")
-        	{
-        		togglePlayers(sender);
-        	}
-        	else
-        	{
-        		sender.sendMessage(prefix + red + "Invalid arguments!");
-        	}
-        }
-        else
-        {
+        if (args.length == 1) {
+            if (args[0].toLowerCase() == "notice") {
+                togglePlayers(sender);
+            } else {
+                sender.sendMessage(prefix + red + "Invalid arguments!");
+            }
+        } else {
             sender.sendMessage(prefix + red + "Invalid arguments!");
         }
 
         return true;
     }
 
-    public void togglePlayers(CommandSender sender)
-    {
-        if (disabledPlayers.contains(sender.getName()))
-        {
+    public void togglePlayers(CommandSender sender) {
+        if (disabledPlayers.contains(sender.getName())) {
             disabledPlayers.remove(sender.getName());
             sender.sendMessage(prefix + green + "Shield Notice enabled!");
-        }
-        else
-        {
+        } else {
             disabledPlayers.add(sender.getName());
             sender.sendMessage(prefix + red + "Shield Notice disabled!");
         }
