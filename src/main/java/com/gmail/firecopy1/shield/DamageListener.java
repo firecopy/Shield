@@ -9,6 +9,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 public class DamageListener implements Listener {
 
     private final Shield plugin;
+    final int shieldID = 34;
 
     public DamageListener(Shield instance) {
         this.plugin = instance;
@@ -16,13 +17,19 @@ public class DamageListener implements Listener {
 
     @EventHandler
     public void whenDamaged(EntityDamageByEntityEvent event) {
-        final int shieldID = 34;
-
         Entity damaged = event.getEntity();
         Entity damager = event.getDamager();
 
-        //If a player is attacking,
+        stopDamagerAttackingWithShield(event, damager);
+
+        runBlockingLogic(event, damaged);
+
+    }
+
+    private void stopDamagerAttackingWithShield(EntityDamageByEntityEvent event, Entity damager) {
+        //If the attacker is a player
         if (damager instanceof Player) {
+            //Casts the type Player onto Damager
             Player PlayerDamager = (Player) damager;
             //and they have permission to use the shield,
             if (PlayerDamager.hasPermission("shield.use")) {
@@ -33,7 +40,9 @@ public class DamageListener implements Listener {
                 }
             }
         }
+    }
 
+    private void runBlockingLogic(EntityDamageByEntityEvent event, Entity damaged) {
         //If a player is attacked,
         if (damaged instanceof Player) {
             Player player = (Player) damaged;
